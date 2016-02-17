@@ -12,9 +12,12 @@ const getArg = (argIdx, def) => (_.isEmpty(process.argv[argIdx])) ? def : proces
 
 const fileIn = getArg(2, 'input.in');
 const fileOut = getArg(3, 'test.out');
-const ts = Date.now();
+
 const pathIn = 'data/in/' + fileIn;
-const pathOut = 'data/out/' + ts + '_' + fileOut;
+//const key = Date.now();
+const key = 'perf';
+//const pathOut = 'data/out/' + key + '_' + fileOut;
+const pathOut = 'data/debug/' + key + '_' + fileOut;
 
 const startingData = io.import(pathIn);
 const dh = dataHandlerProvider();
@@ -100,5 +103,9 @@ while (turns--) {
         io.append(pathOut, commands);
     }
     console.log('End turn ' + (totTurns - turns) + ' of ' + totTurns, (Date.now() - d) + 'ms');
-    //process.exit();
+
+    //if (totTurns - turns === 1){
+        process.exit();
+    //}
+
 }

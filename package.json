@@ -5,7 +5,6 @@
   "main": "build/main.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register",
-    "start": "node build/main.js",
     "build": "rm -rf ./build/; ./node_modules/babel-cli/bin/babel.js ./src --out-dir ./build",
     "watch": "rm -rf ./build/; ./node_modules/babel-cli/bin/babel.js ./src --watch --out-dir ./build",
     "busy" : "node build/main.js busy_day.in busy_day.out",
