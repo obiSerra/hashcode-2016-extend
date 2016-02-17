@@ -1,0 +1,28 @@
+{
+  "name": "hashcode-2016-extended",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "scripts": {
+    "test": "mocha --compilers js:babel-register",
+    "start": "node build/main.js",
+    "build": "rm -rf ./build/; ./node_modules/babel-cli/bin/babel.js ./src --out-dir ./build",
+    "watch": "rm -rf ./build/; ./node_modules/babel-cli/bin/babel.js ./src --watch --out-dir ./build",
+    "busy" : "node build/main.js busy_day.in busy_day.out",
+    "mother" : "node build/main.js mother_of_all_warehouses.in mother_of_all_warehouses.out",
+    "redundancy" : "node build/main.js redundancy.in redundancy.out",
+    "simple" : "node build/main.js simple.in simple.out"
+  },
+  "git": "https://github.com/obiSerra/hashcode-2016-extend.git",
+  "author": "Roberto Serra <https://github.com/obiSerra/>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.3.0",
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.5.2",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-register": "^6.5.2",
+    "expect.js": "^0.3.1",
+    "mocha": "^2.4.5"
+  }
+}
