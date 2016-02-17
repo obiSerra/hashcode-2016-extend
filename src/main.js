@@ -1,4 +1,4 @@
-const d = Date.now();
+let d = Date.now();
 
 import _ from 'lodash';
 import ioHandler from './modules/ioHandler';
@@ -36,7 +36,11 @@ const totTurns = dh.turnsNum(startingData);
 let turns = totTurns;
 
 io.generateFile(pathOut);
+
+console.log('Setup finished in ' + (Date.now() - d) + 'ms');
+console.log(' ------ ');
 while (turns--) {
+    d = Date.now();
     let commands = [];
     let loadCommands = lg.loadFase(orderList, droneList, warehousesList, productList, maxPayload);
     // update state
@@ -90,11 +94,11 @@ while (turns--) {
     });
 
     //-console.log(orderList.forEach(o => console.log(o.id, o.prods[0], o.prods[1])));
-    //console.log('End turn ' + (totTurns - turns) + ' of ' + totTurns);
+
 
     if (!_.isEmpty(commands)) {
         io.append(pathOut, commands);
     }
-    console.log('Turn 1 done', Date.now() - d);
-    process.exit();
+    console.log('End turn ' + (totTurns - turns) + ' of ' + totTurns, (Date.now() - d) + 'ms');
+    //process.exit();
 }
