@@ -13,7 +13,7 @@ const logisticProvider = () => {
     const canCarry = (prods, prdTypes, prd, maxPayload) => l.calcPayload(prods, prdTypes) + prdTypes[prd] <= maxPayload;
     const nextProd = (prods) => prods.reduce((a, c, i) => (_.isNull(a) && c !== 0) ? i : a, null);
 
-    const prodsEmpty = (ar) => ar.reduce((s, a) => a + s, 0) === 0;
+    const prodsEmpty = (ar) => !ar.some(n => n > 0 );
 
     const removeProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e - 1 : e);
     const addProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e + 1 : e);
@@ -44,13 +44,14 @@ const logisticProvider = () => {
 
     l.pickOrder = (orders, drones, productList, maxPayload) => {
         const validOrders = orders.filter(o => {
-            //console.log();
-            return !prodsEmpty(_.first(o.prods)) && _.first(o.prods).some((n, i) => {
-                    return drones.some(d => canCarry(d.prods, productList, i, maxPayload))
-                });
-        });
+            if (prodsEmpty(_.first(o.prods))) return false;
 
-//        console.log(validOrders.length);
+            return drones.some(d => {
+                return d.busy === 0 && _.first(o.prods).some((n, i) => canCarry(d.prods, productList, i, maxPayload));
+            });
+            //console.log();
+
+        });
 
         return _.first(validOrders);
     };
@@ -80,6 +81,7 @@ const logisticProvider = () => {
     l.loadFase = (orderList, droneList, warehouseList, productList, maxPayload, commands = []) => {
         const d = Date.now();
         const order = l.pickOrder(orderList, droneList, productList, maxPayload);
+        console.log('pickorder in ' + (Date.now() - d));
         if (!order) {
             return commands;
         }

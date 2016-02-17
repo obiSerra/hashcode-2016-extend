@@ -4,7 +4,6 @@
 
  #wc -l < data/out/simple.out
 
-npm run redundancy;
 diff data/debug/redundancy-first-round data/debug/perf_redundancy.out
 
 echo "diff ended"
