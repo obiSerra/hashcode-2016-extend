@@ -79,9 +79,9 @@ const logisticProvider = () => {
     l.moveProdToInTransit = (prods, index, num) => moveToGroup(prods, index, num, 1, 2);
 
     l.loadFase = (orderList, droneList, warehouseList, productList, maxPayload, commands = []) => {
-        const d = Date.now();
+        let d = Date.now();
         const order = l.pickOrder(orderList, droneList, productList, maxPayload);
-        console.log('pickorder in ' + (Date.now() - d));
+        //console.log('pickorder in ' + (Date.now() - d));
         if (!order) {
             return commands;
         }
@@ -110,15 +110,15 @@ const logisticProvider = () => {
         const movedProds = l.moveProdToDelivering(order.prods, prod, items);
         const updOrder = Object.assign({}, order, { prods: movedProds });
         const updWarehouse = l.updateWarehouse(warehouse, prod, items);
-
-        //console.log('call ', Date.now() - d, orderList.length);
+        const orderToUpdate = +_.findKey(orderList, { id: order.id });
+        const waToUpdate = +_.findKey(warehouseList, { id: updWarehouse.id });
+        //console.log('new order list ' + (Date.now() - d));
         return l.loadFase(
             orderList
-                .map((e, i) => (i === +_.findKey(orderList, { id: order.id })) ? updOrder : e)
-                .filter((e) => !prodsEmpty(e.prods[0])
-                ),
+                .map((e, i) => (i === orderToUpdate) ? updOrder : e)
+                .filter((e) => !prodsEmpty(e.prods[0])),
             droneList.filter(d => d.id !== drone.id && drone.busy === 0),
-            warehouseList.map((e, i) => (i === +_.findKey(warehouseList, { id: updWarehouse.id })) ? updWarehouse : e),
+            warehouseList.map((e, i) => (i === waToUpdate) ? updWarehouse : e),
             productList,
             maxPayload,
             commands
