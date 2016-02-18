@@ -149,7 +149,6 @@ const logisticProvider = () => {
         return Array(drone.prods.length).fill(0).map((e, i) => {
             return Math.min(drone.prods[i], order.prods[1][i]);
         });
-
     };
 
     l.deliverFase = (orderList, droneList, warehouseList) => {
@@ -159,9 +158,9 @@ const logisticProvider = () => {
         readyToDeliver.forEach(d => {
             const dest = l.getDestinationOrder(d, orderList);
             if (dest) {
-
                 l.getDeliverables(d, dest).forEach((n, p) => {
                     if (n > 0) {
+                        dest.prods = moveToGroup(dest.prods, p, n, 1, 2);
                         commands.push(deliverCommand(d.id, dest.id, p, n));
                     }
                 });

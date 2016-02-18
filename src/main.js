@@ -87,7 +87,6 @@ while (turns-- > 0) {
             go: (busy === 0 && _.isEqual(d.go, d.pos)) ? null : d.go
         });
     });
-    //console.log('Empty Drones ' + droneList.filter(d => d.busy === 0 && lg.prodsEmpty(d.prods)).length + ' out of '+ droneList.length);
 
     if (!_.isEmpty(commands)) {
         io.append(pathOut, commands);
