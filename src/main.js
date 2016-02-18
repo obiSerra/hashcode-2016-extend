@@ -94,7 +94,7 @@ while (turns-- > 0) {
     }
 
     const minBusy = droneList.reduce((c, d) => Math.min(c, d.busy), Infinity);
-    console.log(minBusy);
+    //console.log(minBusy);
 
     if (minBusy > 0) {
         turns = turns - (minBusy - 1);
@@ -106,8 +106,6 @@ while (turns-- > 0) {
             });
         });
     }
-
-
 
     console.log('End turn ' + (totTurns - turns) + ' of ' + totTurns, (Date.now() - d) + 'ms');
 
