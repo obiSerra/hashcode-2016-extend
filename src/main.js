@@ -14,10 +14,10 @@ const fileIn = getArg(2, 'input.in');
 const fileOut = getArg(3, 'test.out');
 
 const pathIn = 'data/in/' + fileIn;
-//const key = Date.now();
-const key = 'perf';
-//const pathOut = 'data/out/' + key + '_' + fileOut;
-const pathOut = 'data/debug/' + key + '_' + fileOut;
+const key = Date.now();
+//const key = 'perf';
+const pathOut = 'data/out/' + key + '_' + fileOut;
+//const pathOut = 'data/debug/' + key + '_' + fileOut;
 
 const startingData = io.import(pathIn);
 const dh = dataHandlerProvider();
@@ -44,8 +44,11 @@ console.log('Setup finished in ' + (Date.now() - d) + 'ms');
 console.log(' ------ ');
 while (turns--) {
     d = Date.now();
+    let dUpd = Date.now();
     let commands = [];
     let loadCommands = lg.loadFase(orderList, droneList, warehousesList, productList, maxPayload);
+    console.log('Load commands ' + (Date.now() - dUpd) + 'ms');
+    dUpd = Date.now();
     // update state
     loadCommands = loadCommands.map(c => {
         const dr = _.findKey(droneList, { id: c[0] });
@@ -71,9 +74,12 @@ while (turns--) {
 
         return _.initial(c);
     });
+    console.log('Load commands upd ' + (Date.now() - dUpd) + 'ms');
+    dUpd = Date.now();
 
     const deliverCommands = lg.deliverFase(orderList, droneList, warehousesList);
-
+    console.log('Deliver commands ' + (Date.now() - dUpd) + 'ms');
+    dUpd = Date.now();
     deliverCommands.forEach(c => {
         const dr = _.findKey(droneList, { id: c[0] });
         const or = _.findKey(orderList, { id: c[2] });
@@ -84,7 +90,8 @@ while (turns--) {
         droneList[dr].go = orderList[or].pos;
         droneList[dr].busy = Math.max(lg.distance(droneList[dr].go, orderList[or].pos), 1);
     });
-
+    console.log('Deliver commands upd ' + (Date.now() - dUpd) + 'ms');
+    dUpd = Date.now();
     commands = commands.concat(loadCommands, deliverCommands);
 
     droneList = droneList.map((d, i) => {
@@ -95,6 +102,8 @@ while (turns--) {
             go: (busy === 0 && _.isEqual(d.go, d.pos)) ? null : d.go
         });
     });
+    console.log('Update drones' + (Date.now() - dUpd) + 'ms');
+    dUpd = Date.now();
 
     //-console.log(orderList.forEach(o => console.log(o.id, o.prods[0], o.prods[1])));
 
@@ -105,7 +114,7 @@ while (turns--) {
     console.log('End turn ' + (totTurns - turns) + ' of ' + totTurns, (Date.now() - d) + 'ms');
 
     //if (totTurns - turns === 1){
-        process.exit();
+        //process.exit();
     //}
 
 }

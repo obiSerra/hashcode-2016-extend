@@ -44,13 +44,14 @@ const logisticProvider = () => {
 
     l.pickOrder = (orders, drones, productList, maxPayload) => {
         const validOrders = orders.filter(o => {
-            if (prodsEmpty(_.first(o.prods))) return false;
-
-            return drones.some(d => {
-                return d.busy === 0 && _.first(o.prods).some((n, i) => canCarry(d.prods, productList, i, maxPayload));
+            if (prodsEmpty(_.first(o.prods))) {
+                return false;
+            }
+            return _.first(o.prods).some((n, i) => {
+                return drones.some(d => {
+                    return d.busy === 0 && canCarry(d.prods, productList, i, maxPayload);
+                })
             });
-            //console.log();
-
         });
 
         return _.first(validOrders);
@@ -79,7 +80,7 @@ const logisticProvider = () => {
     l.moveProdToInTransit = (prods, index, num) => moveToGroup(prods, index, num, 1, 2);
 
     l.loadFase = (orderList, droneList, warehouseList, productList, maxPayload, commands = []) => {
-        let d = Date.now();
+        //let d = Date.now();
         const order = l.pickOrder(orderList, droneList, productList, maxPayload);
         //console.log('pickorder in ' + (Date.now() - d));
         if (!order) {
