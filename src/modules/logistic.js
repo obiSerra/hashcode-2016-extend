@@ -17,6 +17,7 @@ const logisticProvider = () => {
 
     const removeProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e - 1 : e);
     const addProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e + 1 : e);
+    const countProds = (prods) => prods.reduce((s, c) => s + c, 0);
 
     const loadAll = (prods, idx, prodTypes, maxPayload, loaded) => {
         // todo should handle multiple products type from the same order
@@ -54,7 +55,18 @@ const logisticProvider = () => {
             });
         });
 
-        return _.first(validOrders);
+        return _.first(validOrders.sort((a, b) => {
+            const aProds = countProds(_.first(a.prods));
+            const bProds = countProds(_.first(b.prods));
+
+            if (aProds > bProds) {
+                return 1;
+            } else if (aProds < bProds) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }));
     };
 
     l.pickProduct = nextProd;
