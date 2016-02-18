@@ -13,7 +13,7 @@ const logisticProvider = () => {
     const canCarry = (prods, prdTypes, prd, maxPayload) => l.calcPayload(prods, prdTypes) + prdTypes[prd] <= maxPayload;
     const nextProd = (prods) => prods.reduce((a, c, i) => (_.isNull(a) && c !== 0) ? i : a, null);
 
-    const prodsEmpty = (ar) => !ar.some(n => n > 0 );
+    l.prodsEmpty = (ar) => !ar.some(n => n > 0 );
 
     const removeProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e - 1 : e);
     const addProd = (ar, idx) => ar.map((e, i) => (i === idx) ? e + 1 : e);
@@ -31,7 +31,7 @@ const logisticProvider = () => {
     };
 
     const loadRec = (prods, prdTypes, prodsToLoad, maxPayload) => {
-        if (prodsEmpty(prodsToLoad) || !canCarry(prods, prdTypes, _.first(prodsToLoad), maxPayload)) {
+        if (l.prodsEmpty(prodsToLoad) || !canCarry(prods, prdTypes, _.first(prodsToLoad), maxPayload)) {
             return prods;
         } else {
             let prod = null;
@@ -44,7 +44,7 @@ const logisticProvider = () => {
 
     l.pickOrder = (orders, drones, productList, maxPayload) => {
         const validOrders = orders.filter(o => {
-            if (prodsEmpty(_.first(o.prods))) {
+            if (l.prodsEmpty(_.first(o.prods))) {
                 return false;
             }
             return _.first(o.prods).some((n, i) => {
@@ -117,7 +117,7 @@ const logisticProvider = () => {
         return l.loadFase(
             orderList
                 .map((e, i) => (i === orderToUpdate) ? updOrder : e)
-                .filter((e) => !prodsEmpty(e.prods[0])),
+                .filter((e) => !l.prodsEmpty(e.prods[0])),
             droneList.filter(d => d.id !== drone.id && drone.busy === 0),
             warehouseList.map((e, i) => (i === waToUpdate) ? updWarehouse : e),
             productList,
@@ -161,8 +161,8 @@ const logisticProvider = () => {
     const carrying = (drone) => !_.empty(drone.prods);
     const isBusy = (drone) => drone.busy > 0;
     const canDeliver = (drone, warehouses) => {
-        return !isBusy(drone) && !prodsEmpty(drone.prods);
-        //return !isBusy(drone) && warehouses.some(w => _.isEqual(w.pos, drone.pos) && !prodsEmpty(drone.prods));
+        return !isBusy(drone) && !l.prodsEmpty(drone.prods);
+        //return !isBusy(drone) && warehouses.some(w => _.isEqual(w.pos, drone.pos) && !l.prodsEmpty(drone.prods));
     };
 
     l.updateWarehouse = (wh, prod, items) => {
