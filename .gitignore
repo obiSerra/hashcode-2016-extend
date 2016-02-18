@@ -4,3 +4,5 @@ build/
 /data/debug/
 /data/in/
 /data/out/
+build.zip
+log/
