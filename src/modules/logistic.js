@@ -103,7 +103,8 @@ const logisticProvider = () => {
             return commands;
         }
 
-        const load = loadAll(prdToLoad, prod, productList, maxPayload);
+        const load = loadAll(prdToLoad, prod, productList, maxPayload, drone.prods);
+
         const items = load[prod];
 
         commands.push(loadCommand(drone.id, warehouse.id, prod, items, order.id));
